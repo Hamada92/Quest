@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package questionspb;
+
+option go_package = "quest/questions/questionspb";
+
+service QuestionsService {
+  rpc CreateQuestion(CreateQuestionRequest) returns (CreateQuestionResponse){}
+}
+
+message CreateQuestionRequest {
+  string body = 1;
+}
+
+message CreateQuestionResponse {
+  string id = 1;
+  string body = 2;
+}
+
+message Question {
+  string id = 1;
+  string body = 2;
+}
