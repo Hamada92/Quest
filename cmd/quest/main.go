@@ -5,7 +5,9 @@ import (
 
 	"github.com/Hamada92/Quest/internal/config"
 	"github.com/Hamada92/Quest/internal/monolith"
+	"github.com/Hamada92/Quest/internal/waiter"
 	"github.com/Hamada92/Quest/questions"
+	"github.com/go-chi/chi"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -19,6 +21,7 @@ func run() error {
 	if err != nil {
 		return err
 	}
+
 	mono := app{cfg: cfg}
 
 	mono.db, err = sql.Open("pgx", cfg.PG.Conn)
@@ -38,12 +41,16 @@ func run() error {
 	}
 
 	mono.rpc = initRpc()
-
+	mono.mux = initMux()
+	mono.waiter = waiter.New()
 	if err := mono.StartUpModules(); err != nil {
 		return err
 	}
 
-	return nil
+	mono.waiter.Add(
+		mono.waitForWeb,
+		mono.waitForRPC,
+	)
 
 }
 
@@ -52,4 +59,8 @@ func initRpc() *grpc.Server {
 	reflection.Register(server)
 
 	return server
+}
+
+func initMux() *chi.Mux {
+	return chi.NewMux()
 }

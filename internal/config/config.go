@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -12,8 +13,9 @@ type PGConfig struct {
 }
 
 type AppConfig struct {
-	Environment string
-	PG          PGConfig
+	Environment     string
+	PG              PGConfig
+	ShutdownTimeout time.Duration `default:"30s"`
 }
 
 func InitConfig() (a AppConfig, err error) {

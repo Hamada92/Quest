@@ -1,0 +1,15 @@
+openapiOptions:
+  file:
+    - file: "questionspb/messages.proto"
+      option:
+        info:
+          title: Questions
+          version: "1.0.0"
+        basePath: /
+  method:
+    - method: questionspb.QuestionsService.CreateQuestion
+      option:
+        operationId: createQuestion
+        tags:
+          - Question
+        summary: Create a new question
