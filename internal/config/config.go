@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -12,9 +13,29 @@ type PGConfig struct {
 	Conn string
 }
 
+type WebConfig struct {
+	Host string `default:"0.0.0.0"`
+	Port string `default:":8080"`
+}
+
+type RpcConfig struct {
+	Host string `default:"0.0.0.0"`
+	Port string `default:":8085"`
+}
+
+func (c RpcConfig) Address() string {
+	return fmt.Sprintf("%s%s", c.Host, c.Port)
+}
+
+func (c WebConfig) Address() string {
+	return fmt.Sprintf("%s%s", c.Host, c.Port)
+}
+
 type AppConfig struct {
 	Environment     string
 	PG              PGConfig
+	Web             WebConfig
+	Rpc             RpcConfig
 	ShutdownTimeout time.Duration `default:"30s"`
 }
 

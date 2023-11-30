@@ -12,7 +12,7 @@ import (
 type WaitFunc func(ctx context.Context) error
 
 type Waiter interface {
-	Add(fns ...WaitFunc) error
+	Add(fns ...WaitFunc)
 	Wait() error
 	Context() context.Context
 	CancelFunc() context.CancelFunc
@@ -37,7 +37,7 @@ func CatchSignals() WaiterOption {
 	}
 }
 
-func New(options ...WaiterOption) waiter {
+func New(options ...WaiterOption) Waiter {
 	cfg := &waiterCfg{
 		parentCtx:    context.Background(),
 		catchSignals: false,
@@ -47,7 +47,7 @@ func New(options ...WaiterOption) waiter {
 		option(cfg)
 	}
 
-	w := waiter{
+	w := &waiter{
 		fns: []WaitFunc{},
 	}
 

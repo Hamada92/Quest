@@ -2,12 +2,13 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/Hamada92/Quest/internal/config"
 	"github.com/Hamada92/Quest/internal/monolith"
 	"github.com/Hamada92/Quest/internal/waiter"
 	"github.com/Hamada92/Quest/questions"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -42,16 +43,19 @@ func run() error {
 
 	mono.rpc = initRpc()
 	mono.mux = initMux()
-	mono.waiter = waiter.New()
+	mono.waiter = waiter.New(waiter.CatchSignals())
 	if err := mono.StartUpModules(); err != nil {
 		return err
 	}
+
+	fmt.Println("started mallbots application")
+	defer fmt.Println("stopped mallbots application")
 
 	mono.waiter.Add(
 		mono.waitForWeb,
 		mono.waitForRPC,
 	)
-
+	return mono.waiter.Wait()
 }
 
 func initRpc() *grpc.Server {
