@@ -6,6 +6,16 @@ option go_package = "quest/questions/questionspb";
 
 service QuestionsService {
   rpc CreateQuestion(CreateQuestionRequest) returns (CreateQuestionResponse){}
+  rpc GetQuestion(GetQuestionRequest) returns (GetQuestionResponse){}
+}
+
+
+message GetQuestionRequest {
+  string id = 1;
+}
+
+message GetQuestionResponse {
+  Question question = 1;
 }
 
 message CreateQuestionRequest {

@@ -13,3 +13,10 @@ openapiOptions:
         tags:
           - Question
         summary: Create a new question
+        
+    - method: questionspb.QuestionsService.GetQuestion
+      option:
+        operationId: getQuestion
+        tags:
+          - Question
+        summary: Get a question by id

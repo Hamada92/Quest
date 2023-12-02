@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Hamada92/Quest/questions/internal/application"
+	"github.com/Hamada92/Quest/questions/internal/domain"
 	"github.com/Hamada92/Quest/questions/questionspb"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
@@ -28,4 +29,21 @@ func (s server) CreateQuestion(ctx context.Context, request *questionspb.CreateQ
 	err := s.app.CreateQuestion(ctx, application.CreateQuestion{ID: id, Body: body})
 
 	return &questionspb.CreateQuestionResponse{Id: id, Body: body}, err
+}
+
+func (s server) GetQuestion(ctx context.Context, request *questionspb.GetQuestionRequest) (*questionspb.GetQuestionResponse, error) {
+	id := request.GetId()
+
+	question, err := s.app.GetQuestion(ctx, application.GetQuestion{ID: id})
+
+	return &questionspb.GetQuestionResponse{
+		Question: s.qustionFromDomain(question),
+	}, err
+}
+
+func (s server) qustionFromDomain(question *domain.Question) *questionspb.Question {
+	return &questionspb.Question{
+		Id:   question.ID,
+		Body: question.Body,
+	}
 }

@@ -3,18 +3,24 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/Hamada92/Quest/internal/config"
 	"github.com/Hamada92/Quest/internal/monolith"
-	"github.com/Hamada92/Quest/internal/waiter"
 	"github.com/Hamada92/Quest/questions"
+	_ "github.com/jackc/pgx/v4/stdlib"
+
+	"github.com/Hamada92/Quest/internal/waiter"
 	"github.com/go-chi/chi/v5"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
-	run()
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func run() error {
@@ -37,13 +43,14 @@ func run() error {
 		}
 	}(mono.db)
 
+	mono.rpc = initRpc()
+	mono.mux = initMux()
+	mono.waiter = waiter.New(waiter.CatchSignals())
+
 	mono.modules = []monolith.Module{
 		&questions.Module{},
 	}
 
-	mono.rpc = initRpc()
-	mono.mux = initMux()
-	mono.waiter = waiter.New(waiter.CatchSignals())
 	if err := mono.StartUpModules(); err != nil {
 		return err
 	}

@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QuestionsServiceClient interface {
 	CreateQuestion(ctx context.Context, in *CreateQuestionRequest, opts ...grpc.CallOption) (*CreateQuestionResponse, error)
+	GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionResponse, error)
 }
 
 type questionsServiceClient struct {
@@ -42,11 +43,21 @@ func (c *questionsServiceClient) CreateQuestion(ctx context.Context, in *CreateQ
 	return out, nil
 }
 
+func (c *questionsServiceClient) GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionResponse, error) {
+	out := new(GetQuestionResponse)
+	err := c.cc.Invoke(ctx, "/questionspb.QuestionsService/GetQuestion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QuestionsServiceServer is the server API for QuestionsService service.
 // All implementations must embed UnimplementedQuestionsServiceServer
 // for forward compatibility
 type QuestionsServiceServer interface {
 	CreateQuestion(context.Context, *CreateQuestionRequest) (*CreateQuestionResponse, error)
+	GetQuestion(context.Context, *GetQuestionRequest) (*GetQuestionResponse, error)
 	mustEmbedUnimplementedQuestionsServiceServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedQuestionsServiceServer struct {
 
 func (UnimplementedQuestionsServiceServer) CreateQuestion(context.Context, *CreateQuestionRequest) (*CreateQuestionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateQuestion not implemented")
+}
+func (UnimplementedQuestionsServiceServer) GetQuestion(context.Context, *GetQuestionRequest) (*GetQuestionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuestion not implemented")
 }
 func (UnimplementedQuestionsServiceServer) mustEmbedUnimplementedQuestionsServiceServer() {}
 
@@ -88,6 +102,24 @@ func _QuestionsService_CreateQuestion_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _QuestionsService_GetQuestion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuestionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionsServiceServer).GetQuestion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/questionspb.QuestionsService/GetQuestion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionsServiceServer).GetQuestion(ctx, req.(*GetQuestionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // QuestionsService_ServiceDesc is the grpc.ServiceDesc for QuestionsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var QuestionsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateQuestion",
 			Handler:    _QuestionsService_CreateQuestion_Handler,
+		},
+		{
+			MethodName: "GetQuestion",
+			Handler:    _QuestionsService_GetQuestion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

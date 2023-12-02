@@ -5,3 +5,6 @@ http:
     - selector: questionspb.QuestionsService.CreateQuestion
       post: /api/questions
       body: "*"
+
+    - selector: questionspb.QuestionsService.GetQuestion
+      get: /api/questions/{id}

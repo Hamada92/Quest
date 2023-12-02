@@ -23,7 +23,7 @@ func NewQuestionRepository(db *sql.DB, tableName string) QuestionRepository {
 }
 
 func (r QuestionRepository) Find(ctx context.Context, questionID string) (*domain.Question, error) {
-	const query = "SELECT body, FROM %s WHERE id = $1 LIMIT 1"
+	const query = "SELECT body FROM %s WHERE id = $1 LIMIT 1"
 	question := &domain.Question{ID: questionID}
 
 	err := r.db.QueryRowContext(ctx, r.table(query), questionID).Scan(&question.Body)
@@ -65,7 +65,7 @@ func (r QuestionRepository) List(ctx context.Context, n int, limit int) (*domain
 func (r QuestionRepository) Save(ctx context.Context, q *domain.Question) error {
 	query := "INSERT INTO %s VALUES ($1, $2)"
 
-	res, err := r.db.ExecContext(ctx, r.table(query), q.ID, q.Body)
+	res, err := r.db.ExecContext(ctx, r.table(query), q.Body, q.ID)
 
 	if err != nil {
 		return err

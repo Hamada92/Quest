@@ -27,7 +27,7 @@ type app struct {
 
 func (a *app) StartUpModules() error {
 	for _, m := range a.modules {
-		if err := m.StartUp(context.TODO(), a); err != nil {
+		if err := m.StartUp(a.Waiter().Context(), a); err != nil {
 			return err
 		}
 	}
@@ -42,8 +42,16 @@ func (a *app) Config() config.AppConfig {
 	return a.cfg
 }
 
+func (a *app) Waiter() waiter.Waiter {
+	return a.waiter
+}
+
 func (a *app) RPC() *grpc.Server {
 	return a.rpc
+}
+
+func (a *app) Mux() *chi.Mux {
+	return a.mux
 }
 
 func (a *app) waitForWeb(ctx context.Context) error {

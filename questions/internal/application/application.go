@@ -12,8 +12,13 @@ type (
 		Body string
 	}
 
+	GetQuestion struct {
+		ID string
+	}
+
 	App interface {
 		CreateQuestion(ctx context.Context, create CreateQuestion) error
+		GetQuestion(ctx context.Context, get GetQuestion) (*domain.Question, error)
 	}
 
 	Application struct {
@@ -33,4 +38,8 @@ func (a *Application) CreateQuestion(ctx context.Context, create CreateQuestion)
 		return err
 	}
 	return a.questions.Save(ctx, question)
+}
+
+func (a *Application) GetQuestion(ctx context.Context, get GetQuestion) (*domain.Question, error) {
+	return a.questions.Find(ctx, get.ID)
 }
