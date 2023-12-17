@@ -2,7 +2,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: eda-in-golang/customers/customerspb
+    default: github.com/Hamada92/Quest/questions/questionspb
     except:
       - buf.build/googleapis/googleapis
 plugins:

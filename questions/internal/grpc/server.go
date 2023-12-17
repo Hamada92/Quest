@@ -36,8 +36,15 @@ func (s server) GetQuestion(ctx context.Context, request *questionspb.GetQuestio
 
 	question, err := s.app.GetQuestion(ctx, application.GetQuestion{ID: id})
 
+	if err != nil {
+		return nil, err
+	}
+
+	answers, err := s.app.GetAnswers(ctx, application.GetQuestion{ID: id})
+
 	return &questionspb.GetQuestionResponse{
 		Question: s.qustionFromDomain(question),
+		Answers:  s.answersFromDomain(answers),
 	}, err
 }
 
@@ -46,4 +53,17 @@ func (s server) qustionFromDomain(question *domain.Question) *questionspb.Questi
 		Id:   question.ID,
 		Body: question.Body,
 	}
+}
+
+func (s server) answersFromDomain(answers []*domain.Answer) []*questionspb.Answer {
+	var res []*questionspb.Answer
+	for _, a := range answers {
+		w := &questionspb.Answer{
+			Id:         a.ID,
+			Body:       a.Body,
+			QuestionId: a.QuestionID,
+		}
+		res = append(res, w)
+	}
+	return res
 }

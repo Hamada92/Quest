@@ -19,17 +19,19 @@ type (
 	App interface {
 		CreateQuestion(ctx context.Context, create CreateQuestion) error
 		GetQuestion(ctx context.Context, get GetQuestion) (*domain.Question, error)
+		GetAnswers(ctx context.Context, get GetQuestion) ([]*domain.Answer, error)
 	}
 
 	Application struct {
 		questions domain.QuestionRepository
+		answers   domain.AnswersRepository
 	}
 )
 
 var _ App = (*Application)(nil)
 
-func New(questions domain.QuestionRepository) *Application {
-	return &Application{questions: questions}
+func New(questions domain.QuestionRepository, answers domain.AnswersRepository) *Application {
+	return &Application{questions: questions, answers: answers}
 }
 
 func (a *Application) CreateQuestion(ctx context.Context, create CreateQuestion) error {
@@ -42,4 +44,8 @@ func (a *Application) CreateQuestion(ctx context.Context, create CreateQuestion)
 
 func (a *Application) GetQuestion(ctx context.Context, get GetQuestion) (*domain.Question, error) {
 	return a.questions.Find(ctx, get.ID)
+}
+
+func (a *Application) GetAnswers(ctx context.Context, get GetQuestion) ([]*domain.Answer, error) {
+	return a.answers.GetAnswers(ctx, get.ID)
 }

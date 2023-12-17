@@ -1,14 +1,15 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "questionspb/api.proto",
-    "version": "version not set"
+    "title": "Questions",
+    "version": "1.0.0"
   },
   "tags": [
     {
       "name": "QuestionsService"
     }
   ],
+  "basePath": "/",
   "consumes": [
     "application/json"
   ],
@@ -91,6 +92,20 @@
       },
       "additionalProperties": {}
     },
+    "questionspbAnswer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "questionId": {
+          "type": "string"
+        }
+      }
+    },
     "questionspbCreateQuestionRequest": {
       "type": "object",
       "properties": {
@@ -115,6 +130,13 @@
       "properties": {
         "question": {
           "$ref": "#/definitions/questionspbQuestion"
+        },
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/questionspbAnswer"
+          }
         }
       }
     },

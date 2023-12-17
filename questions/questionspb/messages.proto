@@ -2,3 +2,13 @@ syntax = "proto3";
 
 package questionspb;
 
+message Question {
+  string id = 1;
+  string body = 2;
+} 
+
+message Answer {
+  string id = 1;
+  string body = 2;
+  string question_id = 3;
+}

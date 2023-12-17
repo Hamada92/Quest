@@ -2,13 +2,12 @@ syntax = "proto3";
 
 package questionspb;
 
-option go_package = "quest/questions/questionspb";
+import "questionspb/messages.proto";
 
 service QuestionsService {
   rpc CreateQuestion(CreateQuestionRequest) returns (CreateQuestionResponse){}
   rpc GetQuestion(GetQuestionRequest) returns (GetQuestionResponse){}
 }
-
 
 message GetQuestionRequest {
   string id = 1;
@@ -16,6 +15,7 @@ message GetQuestionRequest {
 
 message GetQuestionResponse {
   Question question = 1;
+  repeated Answer answers = 2;
 }
 
 message CreateQuestionRequest {
@@ -27,7 +27,13 @@ message CreateQuestionResponse {
   string body = 2;
 }
 
-message Question {
-  string id = 1;
-  string body = 2;
-}
+// message Question {
+//   string id = 1;
+//   string body = 2;
+// } 
+
+// message Answer {
+//   string id = 1;
+//   string body = 2;
+//   string question_id = 3;
+// }

@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package answerspb;
+
+option go_package = "quest/answers/answerspb";
+
+service AnswersService {
+  rpc CreateAnswer(CreateAnswerRequest) returns (CreateAnswerResponse){};
+  rpc GetAnswers(GetAnswersRequest) returns (GetAnswersResponse){};
+}
+
+message CreateAnswerRequest {
+  string id = 1;
+  string body = 2;
+  string question_id = 3;
+  // TRY Answer answer = 1;
+}
+
+message CreateAnswerResponse {
+  string id = 1;
+  string body = 2;
+  string question_id = 3;
+}
+
+message GetAnswersRequest {
+  string question_id = 1;
+}
+
+message GetAnswersResponse {
+  repeated Answer answers = 1;
+}
+
+message Answer {
+  string id = 1;
+  string body = 2;
+  string question_id = 3;
+}

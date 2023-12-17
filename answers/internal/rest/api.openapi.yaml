@@ -1,0 +1,21 @@
+openapiOptions:
+  file:
+    - file: "answerspb/messages.proto"
+      option:
+        info:
+          title: Answers
+          version: "1.0.0"
+        basePath: /
+  method:
+    - method: answerspb.AnswersService.CreateAnswer
+      option:
+        operationId: createAnswer
+        tags:
+          - Answer
+        summary: Create a new answer
+    - method: answerspb.AnswersService.GetAnswers
+      option:
+        operationId: GetAnswers
+        tags:
+          - Answer
+        summary: returns answers for a question id

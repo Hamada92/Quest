@@ -13,10 +13,15 @@ import (
 type Module struct{}
 
 func (m Module) StartUp(ctx context.Context, mono monolith.Monolith) error {
-	questions := postgres.NewQuestionRepository(mono.DB(), `questions.questions`)
+	conn, err := grpc.Dial(ctx, mono.Config().Rpc.Address())
+	if err != nil {
+		return err
+	}
 
+	questions := postgres.NewQuestionRepository(mono.DB(), `questions.questions`)
+	answers := grpc.NewAnswersRepository(conn)
 	var app application.App
-	app = application.New(questions)
+	app = application.New(questions, answers)
 
 	grpc.RegisterServer(app, mono.RPC())
 

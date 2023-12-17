@@ -37,6 +37,7 @@ type AppConfig struct {
 	Web             WebConfig
 	Rpc             RpcConfig
 	ShutdownTimeout time.Duration `default:"30s"`
+	Secret          string
 }
 
 func InitConfig() (a AppConfig, err error) {

@@ -1,0 +1,10 @@
+type: google.api.Service
+config_version: 3
+http:
+  rules:
+    - selector: answerspb.AnswersService.CreateAnswer
+      post: /api/answers
+      body: "*"
+
+    - selector: answerspb.AnswersService.GetAnswers
+      get: /api/answers
